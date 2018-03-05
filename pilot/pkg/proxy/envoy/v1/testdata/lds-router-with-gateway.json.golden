@@ -1,8 +1,8 @@
 {
   "listeners": [
    {
-    "address": "tcp://0.0.0.0:10080",
-    "name": "http_0.0.0.0_10080",
+    "address": "tcp://[::]:10080",
+    "name": "http_[::]_10080",
     "filters": [
      {
       "type": "read",
@@ -76,8 +76,8 @@
     "bind_to_port": true
    },
    {
-    "address": "tcp://0.0.0.0:10088",
-    "name": "http_0.0.0.0_10088",
+    "address": "tcp://[::]:10088",
+    "name": "http_[::]_10088",
     "filters": [
      {
       "type": "read",

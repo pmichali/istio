@@ -1,369 +1,6 @@
 {
   "listeners": [
    {
-    "address": "tcp://0.0.0.0:15001",
-    "name": "virtual",
-    "filters": [],
-    "bind_to_port": true,
-    "use_original_dst": true
-   },
-   {
-    "address": "tcp://0.0.0.0:443",
-    "name": "http_0.0.0.0_443",
-    "filters": [
-     {
-      "type": "read",
-      "name": "http_connection_manager",
-      "config": {
-       "codec_type": "auto",
-       "stat_prefix": "http",
-       "generate_request_id": true,
-       "tracing": {
-        "operation_name": "egress"
-       },
-       "rds": {
-        "cluster": "rds",
-        "route_config_name": "443",
-        "refresh_delay_ms": 10
-       },
-       "filters": [
-        {
-         "type": "decoder",
-         "name": "mixer",
-         "config": {
-          "v2": {
-           "defaultDestinationService": "hello.default.svc.cluster.local",
-           "forwardAttributes": {
-            "attributes": {
-             "source.ip": {
-              "bytesValue": "AAAAAAAAAAAAAP//CgEBAA=="
-             },
-             "source.labels": {
-              "stringMapValue": {
-               "entries": {
-                "version": "v0"
-               }
-              }
-             },
-             "source.uid": {
-              "stringValue": "kubernetes://v0.default"
-             }
-            }
-           },
-           "mixerAttributes": {
-            "attributes": {}
-           },
-           "serviceConfigs": {
-            "hello.default.svc.cluster.local": {
-             "disableCheckCalls": true,
-             "disableReportCalls": true,
-             "mixerAttributes": {
-              "attributes": {
-               "destination.labels": {
-                "stringMapValue": {
-                 "entries": {
-                  "version": "v0"
-                 }
-                }
-               },
-               "destination.service": {
-                "stringValue": "hello.default.svc.cluster.local"
-               }
-              }
-             }
-            }
-           },
-           "transport": {
-            "checkCluster": "mixer_check_server",
-            "reportCluster": "mixer_report_server"
-           }
-          }
-         }
-        },
-        {
-         "type": "",
-         "name": "cors",
-         "config": {}
-        },
-        {
-         "type": "decoder",
-         "name": "router",
-         "config": {}
-        }
-       ],
-       "access_log": [
-        {
-         "path": "/dev/stdout"
-        }
-       ]
-      }
-     }
-    ],
-    "bind_to_port": false
-   },
-   {
-    "address": "tcp://0.0.0.0:80",
-    "name": "http_0.0.0.0_80",
-    "filters": [
-     {
-      "type": "read",
-      "name": "http_connection_manager",
-      "config": {
-       "codec_type": "auto",
-       "stat_prefix": "http",
-       "generate_request_id": true,
-       "tracing": {
-        "operation_name": "egress"
-       },
-       "rds": {
-        "cluster": "rds",
-        "route_config_name": "80",
-        "refresh_delay_ms": 10
-       },
-       "filters": [
-        {
-         "type": "decoder",
-         "name": "mixer",
-         "config": {
-          "v2": {
-           "defaultDestinationService": "hello.default.svc.cluster.local",
-           "forwardAttributes": {
-            "attributes": {
-             "source.ip": {
-              "bytesValue": "AAAAAAAAAAAAAP//CgEBAA=="
-             },
-             "source.labels": {
-              "stringMapValue": {
-               "entries": {
-                "version": "v0"
-               }
-              }
-             },
-             "source.uid": {
-              "stringValue": "kubernetes://v0.default"
-             }
-            }
-           },
-           "mixerAttributes": {
-            "attributes": {}
-           },
-           "serviceConfigs": {
-            "hello.default.svc.cluster.local": {
-             "disableCheckCalls": true,
-             "disableReportCalls": true,
-             "mixerAttributes": {
-              "attributes": {
-               "destination.labels": {
-                "stringMapValue": {
-                 "entries": {
-                  "version": "v0"
-                 }
-                }
-               },
-               "destination.service": {
-                "stringValue": "hello.default.svc.cluster.local"
-               }
-              }
-             }
-            }
-           },
-           "transport": {
-            "checkCluster": "mixer_check_server",
-            "reportCluster": "mixer_report_server"
-           }
-          }
-         }
-        },
-        {
-         "type": "",
-         "name": "cors",
-         "config": {}
-        },
-        {
-         "type": "decoder",
-         "name": "fault",
-         "config": {
-          "delay": {
-           "type": "fixed",
-           "fixed_delay_percent": 100,
-           "fixed_duration_ms": 5000
-          },
-          "headers": [
-           {
-            "name": "scooby",
-            "value": "doo"
-           }
-          ],
-          "upstream_cluster": "out.world.default.svc.cluster.local|http|version=v0"
-         }
-        },
-        {
-         "type": "decoder",
-         "name": "fault",
-         "config": {
-          "delay": {
-           "type": "fixed",
-           "fixed_delay_percent": 100,
-           "fixed_duration_ms": 5000
-          },
-          "headers": [
-           {
-            "name": "animal",
-            "value": "^dog.*",
-            "regex": true
-           }
-          ],
-          "upstream_cluster": "out.world.default.svc.cluster.local|http|version=v0"
-         }
-        },
-        {
-         "type": "decoder",
-         "name": "router",
-         "config": {}
-        }
-       ],
-       "access_log": [
-        {
-         "path": "/dev/stdout"
-        }
-       ]
-      }
-     }
-    ],
-    "bind_to_port": false
-   },
-   {
-    "address": "tcp://0.0.0.0:81",
-    "name": "http_0.0.0.0_81",
-    "filters": [
-     {
-      "type": "read",
-      "name": "http_connection_manager",
-      "config": {
-       "codec_type": "auto",
-       "stat_prefix": "http",
-       "generate_request_id": true,
-       "tracing": {
-        "operation_name": "egress"
-       },
-       "rds": {
-        "cluster": "rds",
-        "route_config_name": "81",
-        "refresh_delay_ms": 10
-       },
-       "filters": [
-        {
-         "type": "decoder",
-         "name": "mixer",
-         "config": {
-          "v2": {
-           "defaultDestinationService": "hello.default.svc.cluster.local",
-           "forwardAttributes": {
-            "attributes": {
-             "source.ip": {
-              "bytesValue": "AAAAAAAAAAAAAP//CgEBAA=="
-             },
-             "source.labels": {
-              "stringMapValue": {
-               "entries": {
-                "version": "v0"
-               }
-              }
-             },
-             "source.uid": {
-              "stringValue": "kubernetes://v0.default"
-             }
-            }
-           },
-           "mixerAttributes": {
-            "attributes": {}
-           },
-           "serviceConfigs": {
-            "hello.default.svc.cluster.local": {
-             "disableCheckCalls": true,
-             "disableReportCalls": true,
-             "mixerAttributes": {
-              "attributes": {
-               "destination.labels": {
-                "stringMapValue": {
-                 "entries": {
-                  "version": "v0"
-                 }
-                }
-               },
-               "destination.service": {
-                "stringValue": "hello.default.svc.cluster.local"
-               }
-              }
-             }
-            }
-           },
-           "transport": {
-            "checkCluster": "mixer_check_server",
-            "reportCluster": "mixer_report_server"
-           }
-          }
-         }
-        },
-        {
-         "type": "",
-         "name": "cors",
-         "config": {}
-        },
-        {
-         "type": "decoder",
-         "name": "fault",
-         "config": {
-          "delay": {
-           "type": "fixed",
-           "fixed_delay_percent": 100,
-           "fixed_duration_ms": 5000
-          },
-          "headers": [
-           {
-            "name": "scooby",
-            "value": "doo"
-           }
-          ],
-          "upstream_cluster": "out.world.default.svc.cluster.local|http-status|version=v0"
-         }
-        },
-        {
-         "type": "decoder",
-         "name": "fault",
-         "config": {
-          "delay": {
-           "type": "fixed",
-           "fixed_delay_percent": 100,
-           "fixed_duration_ms": 5000
-          },
-          "headers": [
-           {
-            "name": "animal",
-            "value": "^dog.*",
-            "regex": true
-           }
-          ],
-          "upstream_cluster": "out.world.default.svc.cluster.local|http-status|version=v0"
-         }
-        },
-        {
-         "type": "decoder",
-         "name": "router",
-         "config": {}
-        }
-       ],
-       "access_log": [
-        {
-         "path": "/dev/stdout"
-        }
-       ]
-      }
-     }
-    ],
-    "bind_to_port": false
-   },
-   {
     "address": "tcp://10.1.0.0:100",
     "name": "mongo_10.1.0.0_100",
     "filters": [
@@ -980,6 +617,369 @@
          }
         ]
        }
+      }
+     }
+    ],
+    "bind_to_port": false
+   },
+   {
+    "address": "tcp://[::]:15001",
+    "name": "virtual",
+    "filters": [],
+    "bind_to_port": true,
+    "use_original_dst": true
+   },
+   {
+    "address": "tcp://[::]:443",
+    "name": "http_[::]_443",
+    "filters": [
+     {
+      "type": "read",
+      "name": "http_connection_manager",
+      "config": {
+       "codec_type": "auto",
+       "stat_prefix": "http",
+       "generate_request_id": true,
+       "tracing": {
+        "operation_name": "egress"
+       },
+       "rds": {
+        "cluster": "rds",
+        "route_config_name": "443",
+        "refresh_delay_ms": 10
+       },
+       "filters": [
+        {
+         "type": "decoder",
+         "name": "mixer",
+         "config": {
+          "v2": {
+           "defaultDestinationService": "hello.default.svc.cluster.local",
+           "forwardAttributes": {
+            "attributes": {
+             "source.ip": {
+              "bytesValue": "AAAAAAAAAAAAAP//CgEBAA=="
+             },
+             "source.labels": {
+              "stringMapValue": {
+               "entries": {
+                "version": "v0"
+               }
+              }
+             },
+             "source.uid": {
+              "stringValue": "kubernetes://v0.default"
+             }
+            }
+           },
+           "mixerAttributes": {
+            "attributes": {}
+           },
+           "serviceConfigs": {
+            "hello.default.svc.cluster.local": {
+             "disableCheckCalls": true,
+             "disableReportCalls": true,
+             "mixerAttributes": {
+              "attributes": {
+               "destination.labels": {
+                "stringMapValue": {
+                 "entries": {
+                  "version": "v0"
+                 }
+                }
+               },
+               "destination.service": {
+                "stringValue": "hello.default.svc.cluster.local"
+               }
+              }
+             }
+            }
+           },
+           "transport": {
+            "checkCluster": "mixer_check_server",
+            "reportCluster": "mixer_report_server"
+           }
+          }
+         }
+        },
+        {
+         "type": "",
+         "name": "cors",
+         "config": {}
+        },
+        {
+         "type": "decoder",
+         "name": "router",
+         "config": {}
+        }
+       ],
+       "access_log": [
+        {
+         "path": "/dev/stdout"
+        }
+       ]
+      }
+     }
+    ],
+    "bind_to_port": false
+   },
+   {
+    "address": "tcp://[::]:80",
+    "name": "http_[::]_80",
+    "filters": [
+     {
+      "type": "read",
+      "name": "http_connection_manager",
+      "config": {
+       "codec_type": "auto",
+       "stat_prefix": "http",
+       "generate_request_id": true,
+       "tracing": {
+        "operation_name": "egress"
+       },
+       "rds": {
+        "cluster": "rds",
+        "route_config_name": "80",
+        "refresh_delay_ms": 10
+       },
+       "filters": [
+        {
+         "type": "decoder",
+         "name": "mixer",
+         "config": {
+          "v2": {
+           "defaultDestinationService": "hello.default.svc.cluster.local",
+           "forwardAttributes": {
+            "attributes": {
+             "source.ip": {
+              "bytesValue": "AAAAAAAAAAAAAP//CgEBAA=="
+             },
+             "source.labels": {
+              "stringMapValue": {
+               "entries": {
+                "version": "v0"
+               }
+              }
+             },
+             "source.uid": {
+              "stringValue": "kubernetes://v0.default"
+             }
+            }
+           },
+           "mixerAttributes": {
+            "attributes": {}
+           },
+           "serviceConfigs": {
+            "hello.default.svc.cluster.local": {
+             "disableCheckCalls": true,
+             "disableReportCalls": true,
+             "mixerAttributes": {
+              "attributes": {
+               "destination.labels": {
+                "stringMapValue": {
+                 "entries": {
+                  "version": "v0"
+                 }
+                }
+               },
+               "destination.service": {
+                "stringValue": "hello.default.svc.cluster.local"
+               }
+              }
+             }
+            }
+           },
+           "transport": {
+            "checkCluster": "mixer_check_server",
+            "reportCluster": "mixer_report_server"
+           }
+          }
+         }
+        },
+        {
+         "type": "",
+         "name": "cors",
+         "config": {}
+        },
+        {
+         "type": "decoder",
+         "name": "fault",
+         "config": {
+          "delay": {
+           "type": "fixed",
+           "fixed_delay_percent": 100,
+           "fixed_duration_ms": 5000
+          },
+          "headers": [
+           {
+            "name": "scooby",
+            "value": "doo"
+           }
+          ],
+          "upstream_cluster": "out.world.default.svc.cluster.local|http|version=v0"
+         }
+        },
+        {
+         "type": "decoder",
+         "name": "fault",
+         "config": {
+          "delay": {
+           "type": "fixed",
+           "fixed_delay_percent": 100,
+           "fixed_duration_ms": 5000
+          },
+          "headers": [
+           {
+            "name": "animal",
+            "value": "^dog.*",
+            "regex": true
+           }
+          ],
+          "upstream_cluster": "out.world.default.svc.cluster.local|http|version=v0"
+         }
+        },
+        {
+         "type": "decoder",
+         "name": "router",
+         "config": {}
+        }
+       ],
+       "access_log": [
+        {
+         "path": "/dev/stdout"
+        }
+       ]
+      }
+     }
+    ],
+    "bind_to_port": false
+   },
+   {
+    "address": "tcp://[::]:81",
+    "name": "http_[::]_81",
+    "filters": [
+     {
+      "type": "read",
+      "name": "http_connection_manager",
+      "config": {
+       "codec_type": "auto",
+       "stat_prefix": "http",
+       "generate_request_id": true,
+       "tracing": {
+        "operation_name": "egress"
+       },
+       "rds": {
+        "cluster": "rds",
+        "route_config_name": "81",
+        "refresh_delay_ms": 10
+       },
+       "filters": [
+        {
+         "type": "decoder",
+         "name": "mixer",
+         "config": {
+          "v2": {
+           "defaultDestinationService": "hello.default.svc.cluster.local",
+           "forwardAttributes": {
+            "attributes": {
+             "source.ip": {
+              "bytesValue": "AAAAAAAAAAAAAP//CgEBAA=="
+             },
+             "source.labels": {
+              "stringMapValue": {
+               "entries": {
+                "version": "v0"
+               }
+              }
+             },
+             "source.uid": {
+              "stringValue": "kubernetes://v0.default"
+             }
+            }
+           },
+           "mixerAttributes": {
+            "attributes": {}
+           },
+           "serviceConfigs": {
+            "hello.default.svc.cluster.local": {
+             "disableCheckCalls": true,
+             "disableReportCalls": true,
+             "mixerAttributes": {
+              "attributes": {
+               "destination.labels": {
+                "stringMapValue": {
+                 "entries": {
+                  "version": "v0"
+                 }
+                }
+               },
+               "destination.service": {
+                "stringValue": "hello.default.svc.cluster.local"
+               }
+              }
+             }
+            }
+           },
+           "transport": {
+            "checkCluster": "mixer_check_server",
+            "reportCluster": "mixer_report_server"
+           }
+          }
+         }
+        },
+        {
+         "type": "",
+         "name": "cors",
+         "config": {}
+        },
+        {
+         "type": "decoder",
+         "name": "fault",
+         "config": {
+          "delay": {
+           "type": "fixed",
+           "fixed_delay_percent": 100,
+           "fixed_duration_ms": 5000
+          },
+          "headers": [
+           {
+            "name": "scooby",
+            "value": "doo"
+           }
+          ],
+          "upstream_cluster": "out.world.default.svc.cluster.local|http-status|version=v0"
+         }
+        },
+        {
+         "type": "decoder",
+         "name": "fault",
+         "config": {
+          "delay": {
+           "type": "fixed",
+           "fixed_delay_percent": 100,
+           "fixed_duration_ms": 5000
+          },
+          "headers": [
+           {
+            "name": "animal",
+            "value": "^dog.*",
+            "regex": true
+           }
+          ],
+          "upstream_cluster": "out.world.default.svc.cluster.local|http-status|version=v0"
+         }
+        },
+        {
+         "type": "decoder",
+         "name": "router",
+         "config": {}
+        }
+       ],
+       "access_log": [
+        {
+         "path": "/dev/stdout"
+        }
+       ]
       }
      }
     ],

@@ -1,8 +1,8 @@
 {
   "listeners": [
    {
-    "address": "tcp://127.0.0.1:15002",
-    "name": "http_127.0.0.1_15002",
+    "address": "tcp://[::1]:15002",
+    "name": "http_[::1]_15002",
     "filters": [
      {
       "type": "read",
