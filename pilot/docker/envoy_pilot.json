@@ -1,7 +1,7 @@
 {
   "listeners": [
    {
-    "address": "tcp://0.0.0.0:15003",
+    "address": "tcp://[::]:15003",
     "name": "tcp_0.0.0.0_15003",
     "filters": [
      {
@@ -22,7 +22,7 @@
     "bind_to_port": true
    },
    {
-    "address": "tcp://0.0.0.0:15007",
+    "address": "tcp://[::]:15007",
     "name": "tcp_0.0.0.0_15007",
     "filters": [
      {
@@ -45,7 +45,7 @@
   ],
   "admin": {
     "access_log_path": "/dev/stdout",
-    "address": "tcp://127.0.0.1:15000"
+    "address": "tcp://[::1]:15000"
   },
   "cluster_manager": {
     "clusters": [
@@ -56,7 +56,7 @@
         "lb_type": "round_robin",
         "hosts": [
           {
-            "url": "tcp://127.0.0.1:8080"
+            "url": "tcp://[::1]:8080"
           }
         ]
       }
