@@ -41,7 +41,12 @@ func ResolveAddr(addr string) (string, error) {
 	if lookupErr != nil {
 		return "", fmt.Errorf("lookup failed for udp address: %v", lookupErr)
 	}
-	resolvedAddr := fmt.Sprintf("%s%s", addrs[0].IP, port)
+	var resolvedAddr string
+	if addrs[0].IP.To4() == nil {
+		resolvedAddr = fmt.Sprintf("[%s]%s", addrs[0].IP, port)
+	} else {
+		resolvedAddr = fmt.Sprintf("%s%s", addrs[0].IP, port)
+	}
 	log.Infof("Addr resolved to: %s", resolvedAddr)
 	return resolvedAddr, nil
 }
