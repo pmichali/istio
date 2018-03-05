@@ -17,9 +17,9 @@ package bootstrap
 import (
 	"fmt"
 	"io/ioutil"
+	"net"
 	"os"
 	"path"
-	"strings"
 	"text/template"
 
 	meshconfig "istio.io/api/mesh/v1alpha1"
@@ -72,16 +72,25 @@ func WriteBootstrap(config *meshconfig.ProxyConfig, epoch int, pilotSAN []string
 	opts["refresh_delay"] = fmt.Sprintf("{\"seconds\": %d, \"nanos\": %d}", config.DiscoveryRefreshDelay.Seconds, config.DiscoveryRefreshDelay.Nanos)
 	opts["connect_timeout"] = fmt.Sprintf("{\"seconds\": %d, \"nanos\": %d}", config.ConnectTimeout.Seconds, config.ConnectTimeout.Nanos)
 
-	addPort := strings.Split(config.DiscoveryAddress, ":")
-	opts["pilot_address"] = fmt.Sprintf("{\"address\": \"%s\", \"port_value\": %s}", addPort[0], addPort[1])
+	h, p, err := net.SplitHostPort(config.DiscoveryAddress)
+	if err != nil {
+		return "", fmt.Errorf("PCM: Unable to parse Discovery address %q: %s", config.DiscoveryAddress, err.Error())
+	}
+	opts["pilot_address"] = fmt.Sprintf("{\"address\": \"%s\", \"port_value\": %s}", h, p)
 
 	if config.ZipkinAddress != "" {
-		addPort = strings.Split(config.ZipkinAddress, ":")
-		opts["zipkin"] = fmt.Sprintf("{\"address\": \"%s\", \"port_value\": %s}", addPort[0], addPort[1])
+		h, p, err := net.SplitHostPort(config.ZipkinAddress)
+		if err != nil {
+			return "", fmt.Errorf("PCM: Unable to parse Zipkin address %q: %s", config.ZipkinAddress, err.Error())
+		}
+		opts["zipkin"] = fmt.Sprintf("{\"address\": \"%s\", \"port_value\": %s}", h, p)
 	}
 	if config.StatsdUdpAddress != "" {
-		addPort = strings.Split(config.StatsdUdpAddress, ":")
-		opts["statsd"] = fmt.Sprintf("{\"address\": \"%s\", \"port_value\": %s}", addPort[0], addPort[1])
+		h, p, err := net.SplitHostPort(config.StatsdUdpAddress)
+		if err != nil {
+			return "", fmt.Errorf("PCM: Unable to parse StatsdUdp address %q: %s", config.StatsdUdpAddress, err.Error())
+		}
+		opts["statsd"] = fmt.Sprintf("{\"address\": \"%s\", \"port_value\": %s}", h, p)
 	}
 	fout, err := os.Create(fname)
 	if err != nil {
