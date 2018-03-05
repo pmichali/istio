@@ -548,14 +548,7 @@ func ValidateIPv4Address(addr string) error {
 	if ip == nil {
 		return fmt.Errorf("%v is not a valid IP", addr)
 	}
-	return nil // Temp HACK
-
-	// The current implementation only supports IP v4 addresses
-	if ip.To4() == nil {
-		return fmt.Errorf("%v is not a valid IPv4 address", addr)
-	}
-
-	return nil
+	return nil // Accet IPv4 or IPv6 address
 }
 
 // ValidateDelay checks that fault injection delay is well-formed
@@ -1224,11 +1217,11 @@ func ValidateDestinationPolicy(msg proto.Message) error {
 func ValidateProxyAddress(hostAddr string) error {
 	host, p, err := net.SplitHostPort(hostAddr)
 	if err != nil {
-		return fmt.Errorf("Unable to split %q: %s", hostAddr, err.Error())
+		return fmt.Errorf("unable to split %q: %s", hostAddr, err.Error())
 	}
 	port, err := strconv.Atoi(p)
 	if err != nil {
-		return fmt.Errorf("Atoi parsing of %s: %s", p, err.Error())
+		return fmt.Errorf("unable to parse string %q as int: %s", p, err.Error())
 	}
 	if err = ValidatePort(port); err != nil {
 		return err
