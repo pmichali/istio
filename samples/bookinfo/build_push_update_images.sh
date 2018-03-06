@@ -23,8 +23,16 @@ if [ "$#" -ne 1 ]; then
 fi
 
 VERSION=$1
+echo "Building images"
 src/build-services.sh $VERSION
 IMAGES=$(docker images -f reference=istio/examples-bookinfo*:$VERSION --format "{{.Repository}}:$VERSION")
-for IMAGE in $IMAGES; do docker push $IMAGE; done
-sed -i "s/\(istio\/examples-bookinfo-.*\):[[:digit:]]\.[[:digit:]]\.[[:digit:]]/\1:$VERSION/g" */bookinfo*.yaml
+REMOTES=`echo ${IMAGES} | sed "s/istio\///g"`
+echo "Tagging and pushing to repo $HUB"
+for IMAGE in $IMAGES; do
+    remote=`echo $IMAGE | sed "s/istio\///"`
+    docker tag $IMAGE $HUB/$remote
+    docker push $HUB/$remote
+done
+echo "Modifying image location (${HUB}) in YAML files"
+sed -i "s/istio\(\/examples-bookinfo-.*\):[[:digit:]]\.[[:digit:]]\.[[:digit:]]/docker.io\/$GITHUB_USER\1:$VERSION/g" */bookinfo*.yaml
 
